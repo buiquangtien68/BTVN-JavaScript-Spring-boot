@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .active {
+            color: red;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo Application</h1>
+
+    <input type="text" placeholder="Enter todo..." id="input-todo">
+    <button id="btn-add">Add</button>
+
+    <ul>
+        <li>
+            <input type="checkbox">
+            <span>Đi chơi</span>
+            <button>Edit</button>
+            <button>Delete</button>
+        </li>
+        <li>
+            <input type="checkbox" checked>
+            <span class="active">Làm bài tập</span>
+            <button>Edit</button>
+            <button>Delete</button>
+        </li>
+        <li>
+            <input type="checkbox">
+            <span>Đá bóng</span>
+            <button>Edit</button>
+            <button>Delete</button>
+        </li>
+    </ul>
+    <input type="text" placeholder="Search todo..." id="search-todo">
+    <button id="btn-search">Search</button>
+    <ul id="ul-result"></ul>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>
