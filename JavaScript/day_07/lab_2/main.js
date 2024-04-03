@@ -144,18 +144,19 @@ const searchToDo = document.getElementById("search-todo")
 const btnSearch = document.getElementById("btn-search")
 const ulResul =  document.getElementById("ul-result")
 
-btnSearch.addEventListener("click", ()=>{
+btnSearch.addEventListener("click", async ()=>{
     const value = searchToDo.value.trim();
     if (value==="") {
         alert("Mời bạn nhập tên công việc")
         return;
     }
-    let foundToDo = toDoList.filter(toDo=> toDo.title.toLowerCase().includes(value.toLowerCase()));
+    let foundToDo1 = await axios.get(`${API_URL}?title_like=${value}`) 
     let html =""
-    if(foundToDo.length==0){
+    console.log(foundToDo1)
+    if(foundToDo1.data.length==0){
         html+=`<li>Không có công việc này</li>`
     }else{
-        foundToDo.forEach(toDo =>{
+        foundToDo1.data.forEach(toDo =>{
             html+=`
             <li>
                 <input 

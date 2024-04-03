@@ -39,11 +39,11 @@
   "toDo": [
     {
       "title": "Làm bài ",
-      "status": false,
+      "status": true,
       "id": 1
     },
     {
-      "title": "chơi game",
+      "title": "làm bài a",
       "status": true,
       "id": 2
     },
