@@ -33,71 +33,71 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Person> sortPeopleByFullName() {
-        return List.of();
+        return personDAO.sortPeopleByFullName();
     }
 
     @Override
     public List<Person> sortPeopleByFullNameReversed() {
-        return List.of();
+        return personDAO.sortPeopleByFullNameReversed();
     }
 
     @Override
     public List<String> getSortedJobs() {
-        return List.of();
+        return personDAO.getSortedJobs();
     }
 
     @Override
     public List<String> getSortedCities() {
-        return List.of();
+        return personDAO.getSortedCities();
     }
 
     @Override
     public List<String> femaleNames() {
-        return List.of();
+        return personDAO.femaleNames();
     }
 
     @Override
     public Person highestEarner() {
-        return null;
+        return personDAO.highestEarner();
     }
 
     @Override
     public List<Person> bornAfter1990() {
-        return List.of();
+        return personDAO.bornAfter1990();
     }
 
     @Override
     public double averageSalary() {
-        return 0;
+        return personDAO.averageSalary();
     }
 
     @Override
     public double averageAge() {
-        return 0;
+        return personDAO.averageAge();
     }
 
     @Override
     public List<Person> nameContains(String keyword) {
-        return List.of();
+        return personDAO.nameContains(keyword);
     }
 
     @Override
     public List<Person> sortedByAgeForMale() {
-        return List.of();
+        return personDAO.sortedByAgeForMale();
     }
 
     @Override
     public Person longestName() {
-        return null;
+        return personDAO.longestName();
     }
 
     @Override
     public List<Person> aboveAverageSalary() {
-        return List.of();
+        return personDAO.aboveAverageSalary();
     }
 
     @Override
     public Map<String, List<Person>> groupPeopleByCity() {
-        return Map.of();
+        return personDAO.groupPeopleByCity();
     }
 }
