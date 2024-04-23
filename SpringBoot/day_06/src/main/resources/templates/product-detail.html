@@ -27,8 +27,8 @@
             <p th:text="${'Rating:' +product.rating}" class="rating"></p>
             </div>
         </div>
+    <h3>Customer Reviews</h3>
     <div class="review" th:each="review: ${product.review}">
-        <h3>Customer Reviews</h3>
         <div class="review-info" >
             <img th:src="${review.authorAvatar}" alt="Reviewer Avatar">
             <div class="review-details">

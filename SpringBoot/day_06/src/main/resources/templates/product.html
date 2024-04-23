@@ -10,8 +10,8 @@
     <div class="home-link">
         <a th:href="@{/}">Trang chủ</a>
     </div>
-
 </div>
+
 
 <div class="content">
     <div class="product-container">
@@ -24,7 +24,7 @@
                     <div class="priceN" th:if="${product.priceDiscount == 0}" th:text="${'Price: ' + product.price}"></div>
                     <div class="price" th:if="${product.priceDiscount != 0}" th:text="${'Price: ' + product.price}"></div>
                     <div class="priceDiscount" th:if="${product.priceDiscount != 0}" th:text="${'Discount Price: ' + product.priceDiscount}"></div>
-                    <div th:text="${'Rating:' +product.rating}" class="rating">4.5 stars</div>
+                    <div th:text="${'Rating: ' +product.rating}" class="rating">4.5 stars</div>
                     <a  th:href="@{/products/{id} (id=${product.id})}"> Xem chi tiết
                     </a>
                 </div>
@@ -49,6 +49,5 @@
         </li>
     </ul>
 </div>
-
 </body>
 </html>
