@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail</title>
+    <link rel="stylesheet" th:href="@{/styleDetail.css}">
+</head>
+<body>
+<div class="navbar">
+    <div class="home-link">
+        <a th:href="@{/}">Trang chủ</a>
+    </div>
+
+</div>
+<div class="content">
+    <h1 th:if="${product==null}">Không tìm thấy Product</h1>
+    <div class="product-details">
+        <div class="product-image">
+            <img th:src="${product.thumbnail}" alt="Product Image">
+        </div>
+        <div class="product-info">
+            <h2 th:text="${product.name}"></h2>
+            <p th:text="${product.description}"></p>
+            <p class="priceN" th:if="${product.priceDiscount == 0}" th:text="${'Price: ' + product.price}"></p>
+            <p class="price" th:if="${product.priceDiscount != 0}" th:text="${'Price: ' + product.price}"></p>
+            <p class="priceDiscount" th:if="${product.priceDiscount != 0}" th:text="${'Discount Price: ' + product.priceDiscount}"></p>
+            <p th:text="${'Rating:' +product.rating}" class="rating"></p>
+            </div>
+        </div>
+    <div class="review" th:each="review: ${product.review}">
+        <h3>Customer Reviews</h3>
+        <div class="review-info" >
+            <img th:src="${review.authorAvatar}" alt="Reviewer Avatar">
+            <div class="review-details">
+                <p ><strong th:text="${review.authorName}"></strong></p>
+                <p class="review-date" th:text="${review.createdAt}"></p>
+            </div>
+        </div>
+        <div class="review-content">
+            <p><strong th:text="'Rating: '+${review.rating}"></strong></p>
+            <p th:text="${review.content}"></p>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

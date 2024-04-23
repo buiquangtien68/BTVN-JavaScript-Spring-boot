@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <div class="home-link">
+        <a th:href="@{/}">Trang chủ</a>
+    </div>
+
+</div>
+
+<div class="content">
+    <div class="product-container">
+        <div th:each="product :${pageData.getContent()}"  class="product">
+            <a  th:href="@{/products/{id} (id=${product.id})}">
+                <img th:src="${product.thumbnail}" alt="Product Image">
+            </a>
+                <div class="details">
+                    <div class="name"><h3 th:text="${product.name}"></h3></div>
+                    <div class="priceN" th:if="${product.priceDiscount == 0}" th:text="${'Price: ' + product.price}"></div>
+                    <div class="price" th:if="${product.priceDiscount != 0}" th:text="${'Price: ' + product.price}"></div>
+                    <div class="priceDiscount" th:if="${product.priceDiscount != 0}" th:text="${'Discount Price: ' + product.priceDiscount}"></div>
+                    <div th:text="${'Rating:' +product.rating}" class="rating">4.5 stars</div>
+                    <a  th:href="@{/products/{id} (id=${product.id})}"> Xem chi tiết
+                    </a>
+                </div>
+
+
+        </div>
+    </div>
+
+    <ul th:if="${pageData.getTotalPages() != 1}" class="pagination-container">
+        <li th:if="${pageData.getCurrentPage() != 1}" class="pagination">
+            <button><a th:href="@{/ (page=${pageData.getCurrentPage() - 1})}">Trang trước</a></button>
+        </li>
+
+        <li th:each="number: ${#numbers.sequence(1, pageData.getTotalPages())}" class="pagination">
+            <button th:styleappend="${number == pageData.getCurrentPage() ? 'background-color: #fff;' : ''}">
+                <a th:href="@{/ (page=${number})}" th:text="${number}"></a>
+            </button>
+        </li>
+
+        <li th:if="${pageData.getCurrentPage() != pageData.getTotalPages()}" class="pagination">
+            <button><a th:href="@{/(page=${pageData.getCurrentPage() + 1})}">Trang sau</a></button>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
