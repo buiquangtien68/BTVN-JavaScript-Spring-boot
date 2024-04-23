@@ -25,6 +25,7 @@
             <p class="price" th:if="${product.priceDiscount != 0}" th:text="${'Price: ' + product.price}"></p>
             <p class="priceDiscount" th:if="${product.priceDiscount != 0}" th:text="${'Discount Price: ' + product.priceDiscount}"></p>
             <p th:text="${'Rating:' +product.rating}" class="rating"></p>
+            <button class="green-button">Mua hàng</button>
             </div>
         </div>
     <h3>Customer Reviews</h3>
