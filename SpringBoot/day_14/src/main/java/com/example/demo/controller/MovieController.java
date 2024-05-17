@@ -90,4 +90,13 @@ public class MovieController {
        return "chi-tiet-phim";
     }
 
+    @GetMapping("/dang-nhap")
+    public String dangNhap(Model model) {
+       return "dang-nhap";
+    }
+    @GetMapping("/dang-ky")
+    public String dangKy(Model model) {
+       return "dang-ky";
+    }
+
 }

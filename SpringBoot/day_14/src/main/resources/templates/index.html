@@ -25,6 +25,23 @@
                     <a class="nav-link  text-white"  th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
                     <a class="nav-link  text-white"  th:href="@{/tin-tuc}">Tin tức</a>
                 </div>
+                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user == null}">
+                    <a class="nav-link  text-white"  th:href="@{/dang-nhap}">Đăng nhập</a>
+                </div>
+                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user != null}">
+                    <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${session.user.name}">
+                            Dropdown link
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" th:if="${session.user.role.toString().equals('ADMIN')}">Trang quản trị</a></li>
+                            <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item" href="#">Lịch sử xem phim</a></li>
+                            <li><a class="dropdown-item" href="#">Phim yêu thích</a></li>
+                            <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

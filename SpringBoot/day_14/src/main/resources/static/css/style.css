@@ -12,3 +12,6 @@
 .star.active {
     color: #EDBB0E;
 }
+.hidden {
+    display: none;
+}

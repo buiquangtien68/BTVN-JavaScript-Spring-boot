@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,6 +47,8 @@ class DemoApplicationTests {
 	ReviewRepository reviewRepository;
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
 	@Test
@@ -276,6 +279,15 @@ class DemoApplicationTests {
 						.build();
 				episodeRepository.save(episode);
 			}
+		}
+	}
+
+	@Test
+	void updatePrivatePassword(){
+		List<User> users = userRepository.findAll();
+		for (User user : users) {
+			user.setPassword(bCryptPasswordEncoder.encode("123"));
+			userRepository.save(user);
 		}
 	}
 
