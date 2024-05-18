@@ -50,7 +50,7 @@ const reviewListEl = document.querySelector(".review-list");
 const renderReview = reviews => {
     let html = "";
     reviews.forEach(review => {
-        if (user.id === review.user.id){
+        if (user.id!==null &&user.id === review.user.id){
             html += `
             <div class="comment-info bg-light-subtle rounded-5 p-3 mt-3">
                            <div class="d-flex align-items-center">
@@ -140,6 +140,7 @@ const postRv =async (data) => {
 
         // Dong modal
         myModalReviewEl.hide();
+        toastr.success("Đánh giá thành công")
 
 
     } catch (e) {

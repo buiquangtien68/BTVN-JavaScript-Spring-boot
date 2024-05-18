@@ -68,7 +68,7 @@ public class BookController {
     public List<Book> searchBook(@PathVariable String keyword) {return bookService.searchBook(keyword);}
 
     //Tìm kiếm theo khoảng thời gian
-    @GetMapping("/startYear/{startYear}/endYear/{endYear}")
+    @GetMapping("y")
     @ResponseBody
     public List<Book> searchBookByYear(@PathVariable int startYear, @PathVariable int endYear) {return bookService.searchBookByYear(startYear, endYear);}
 }
