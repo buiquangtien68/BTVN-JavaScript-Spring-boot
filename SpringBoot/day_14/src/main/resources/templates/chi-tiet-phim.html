@@ -23,45 +23,8 @@
 </head>
 
 <body>
-<header class="bg-dark">
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container">
-            <a class="navbar-brand" th:href="@{/}">
-                <img src="https://motchilltv.ac/_ipx/s_150x35/logo.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active text-white" th:href="@{/}">Trang chủ</a>
-                    <a class="nav-link text-white" th:href="@{/phim-bo}">Phim bộ</a>
-                    <a class="nav-link text-white" th:href="@{/phim-le}">Phim lẻ</a>
-                    <a class="nav-link  text-white"  th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
-                    <a class="nav-link  text-white"  th:href="@{/tin-tuc}">Tin tức</a>
-                </div>
-                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user == null}">
-                    <a class="nav-link  text-white"  th:href="@{/dang-nhap}">Đăng nhập</a>
-                </div>
-                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user != null}">
-                    <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${session.user.name}">
-                            Dropdown link
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" th:if="${session.user.role.toString().equals('ADMIN')}">Trang quản trị</a></li>
-                            <li><a class="dropdown-item" href="#">Thông tin cá nhân</a></li>
-                            <li><a class="dropdown-item" href="#">Lịch sử xem phim</a></li>
-                            <li><a class="dropdown-item" href="#">Phim yêu thích</a></li>
-                            <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-</header>
 
+<th:block th:replace="~{/fragment/header :: header}"></th:block>
 <!--CHI TIẾT PHIM-->
 <section class="py-4 bg-body-secondary">
     <div class="container ">
@@ -111,6 +74,12 @@
                     <p>
                         Rating: <th:block th:text="${movie.getRating()}"></th:block> <i class="fas fa-star" style="color: #ffd43b"></i>
                     </p>
+
+                    <div >
+                        <button id="watchButton" style="background-color: red;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Xem phim</button>
+                        <button th:if="${session.user !=null}" id="favoriteButton" class="favorite-btn" th:onclick="toggleFavorite()"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"><th:block th:if="${favorite != null}">Bỏ yêu thích</th:block><th:block th:unless="${favorite != null}">Yêu thích</th:block></button>
+                        <button th:if="${session.user ==null}" id="favoriteButtonAnnotation" class="favorite-btn"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Yêu thích</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,45 +135,48 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                               <div class="d-flex flex-column justify-content-center align-items-center">
-                                   <div class="rating">
-                                    <span class="star" data-rating="1">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="2">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="3">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="4">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="5">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="6">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="7">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="8">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="9">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
-                                       <span class="star" data-rating="10">
-                                       <i class="fa-solid fa-star"></i>
-                                    </span>
+                                <form id="form-review">
+                                   <div class="d-flex flex-column justify-content-center align-items-center ">
+                                       <div class="rating form-group">
+                                        <span class="star" data-rating="1">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="2">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="3">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="4">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="5">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="6">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="7">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="8">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="9">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                           <span class="star" data-rating="10">
+                                           <i class="fa-solid fa-star"></i>
+                                        </span>
+                                       </div>
+                                       <div id="rating-value" ></div>
                                    </div>
-                                   <div id="rating-value"></div>
-                               </div>
-                               <form id="form-review">
-                                   <div class="mb-3">
+                                    <div class="form-group">
+                                        <input type="hidden"  id="rating-input" name="rating" />
+                                    </div>
+                                   <div class="mb-3 form-group">
                                        <label for="review-content" class="form-label">Nội dung đánh giá</label>
-                                       <textarea class="form-control" id="review-content" rows="3"></textarea>
+                                       <textarea class="form-control" id="review-content" rows="3" name="content"></textarea>
                                    </div>
                                    <div class="mb-3">
                                        <button type="submit" class="btn btn-primary" id="btn-create-review">Tạo</button>
@@ -264,62 +236,15 @@
 </section>
 
 
-<footer class="bg-dark py-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-3">
-                <img
-                        src="https://motchilltv.ac/_ipx/s_150x35/logo.png"
-                        alt="logo"
-                />
-                <p class="text-white mt-4">
-                    Motchill - Trang web xem phim trực tuyến miễn phí chất lượng cao
-                    với giao diện trực quan, tốc độ tải trang nhanh, cùng kho phim với
-                    hơn 10.000+ phim mới, phim hay, luôn cập nhật phim nhanh, hứa hẹn
-                    sẽ đem lại phút giây thư giãn cho bạn.
-                </p>
-            </div>
-            <div class="col-3">
-                <div class="text-white">
-                    <h5 class="mb-3">DANH MỤC</h5>
-                    <ul class="ps-0">
-                        <li class="mb-3">Phim mới</li>
-                        <li class="mb-3">Phim bộ</li>
-                        <li class="mb-3">Phim lẻ</li>
-                        <li class="mb-3">Phim chiếu rạp</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="text-white">
-                    <h5 class="mb-3">DANH MỤC</h5>
-                    <ul class="ps-0">
-                        <li class="mb-3">Phim mới</li>
-                        <li class="mb-3">Phim bộ</li>
-                        <li class="mb-3">Phim lẻ</li>
-                        <li class="mb-3">Phim chiếu rạp</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="text-white">
-                    <h5 class="mb-3">DANH MỤC</h5>
-                    <ul class="ps-0">
-                        <li class="mb-3">Phim mới</li>
-                        <li class="mb-3">Phim bộ</li>
-                        <li class="mb-3">Phim lẻ</li>
-                        <li class="mb-3">Phim chiếu rạp</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
+<th:block th:replace="~{/fragment/footer :: footer}"></th:block>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js" integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/common.js"></script>
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -328,12 +253,18 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/common.js"></script>
 <script th:inline="javascript">
-    const movie =[[${movie}]];
+    const currentMovie =[[${movie}]];
     let reviews =[[${reviews}]]
-    const user = [[${session.user}]]
+    let user = [[${session.user}]]
     console.log(user)
     console.log(reviews)
+    let favorites =[[${favorites}]]
+    let favorite =[[${favorite}]]
+    console.log(favorite)
+    console.log(favorites)
 </script>
+<script src="/js/movie-favorite.js"></script>
 <script src="/js/movie-review.js"></script>
+
 </body>
 </html>

@@ -297,9 +297,9 @@ class DemoApplicationTests {
 		List<Movie> movies = movieRepository.findByStatus(true);
 
 		for (User user : users) {
-			// 1 -> 3 favorite movies. Each favorite has a unique movie
+			// 1 -> 4 favorite movies. Each favorite has a unique movie
 			List<Movie> favoriteMovies = new ArrayList<>();
-			for (int i = 0; i < new Random().nextInt(3) + 1; i++) {
+			for (int i = 0; i < new Random().nextInt(4) + 1; i++) {
 				Movie movie = movies.get(new Random().nextInt(movies.size()));
 				if (!favoriteMovies.contains(movie)) {
 					favoriteMovies.add(movie);

@@ -1,5 +1,7 @@
 package com.example.demo.model.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,7 +13,11 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequest {
+    @NotEmpty(message = "Email k được để trống")
+    @Email(message = "Email k đúng định dạng")
     String email;
+
+    @NotEmpty(message = "Password k được để trống")
     String password;
 }
 

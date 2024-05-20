@@ -1,4 +1,3 @@
-
 toastr.options = {
     "closeButton": false,
     "debug": false,
@@ -15,4 +14,17 @@ toastr.options = {
     "hideEasing": "linear",
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
+}
+const logout = async ()=>{
+    console.log("swuj kieenj aans nuts")
+    try {
+        let res = await axios.post("/api/auth/logout");
+        toastr.success("Đăng xuất thành công")
+        setTimeout(()=>{
+            window.location.href='/'
+        },1000)
+    } catch (e) {
+        console.log(e)
+        toastr.error(e.response.data.message);
+    }
 }

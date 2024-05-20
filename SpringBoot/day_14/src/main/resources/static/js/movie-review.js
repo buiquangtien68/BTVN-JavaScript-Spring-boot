@@ -2,8 +2,10 @@
 const stars = document.querySelectorAll(".star");
 const ratingValue = document.getElementById("rating-value");
 
-let currentRating = 0;
-
+let currentRating = null;
+let ratingHidden=document.getElementById('rating-input');
+ratingHidden.value = currentRating;
+console.log(ratingHidden)
 stars.forEach((star) => {
     star.addEventListener("mouseover", () => {
         resetStars();
@@ -20,6 +22,9 @@ stars.forEach((star) => {
         currentRating = parseInt(star.getAttribute("data-rating"));
         ratingValue.textContent = `Bạn đã đánh giá ${currentRating} sao.`;
         highlightStars(currentRating);
+        ratingHidden.value = currentRating; // Cập nhật giá trị của trường input ẩn
+        console.log(ratingHidden)
+        $('#form-review').valid();
     });
 });
 
@@ -103,26 +108,30 @@ modalReviewEl.addEventListener('hidden.bs.modal', event => {
     ratingValue.textContent = "";
     idReviewEdit=null;
     resetStars();
+    ratingHidden.value=currentRating;
 })
+
 
 formReviewEl.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("Đã nghe ấn nút")
     // TODO: Validate các thông tin (sử dụng thư jQuery Validation)
-    if (currentRating === 0) {
-        alert("Vui lòng chọn số sao");
+    if (currentRating === null) {
+        toastr.error("Không được để sao trống");
         return;
     }
+    ratingHidden.value = currentRating; // Cập nhật giá trị của trường input ẩn
+    console.log(ratingHidden)
+    $('#form-review').valid();
 
-    if (reviewContentEl.value.trim() === "") {
-        alert("Nội dung đánh giá không được để trống");
+    if (!$('#form-review').valid()){
         return;
     }
 
     const data = {
         content: reviewContentEl.value,
         rating: currentRating,
-        movieId: movie.id
+        movieId: currentMovie.id
     }
 
     // Gọi API
@@ -157,8 +166,10 @@ const deleteRv =async (id)=>{
             console.log("Sự kiện xóa rv")
             reviews=reviews.filter(rv=>rv.id !==id);
             renderReview(reviews)
+
             // Dong modal
             myModalReviewEl.hide();
+            toastr.success("Xóa thành công đánh giá")
         } catch (error) {
             console.log(error)
         }
@@ -190,9 +201,52 @@ const updateRv=async (data) =>{
                 console.log(updateData.data)
                 renderReview(reviews);
             }
+
             // Dong modal
             myModalReviewEl.hide();
+            toastr.success("Cập nhật thành công")
         } catch (e) {
             console.log(e)
         }
 }
+$('#form-review').validate({
+    rules: {
+        rating: {
+            required: true,
+            min:1,
+        },
+        content: {
+            required: true,
+        },
+    },
+    messages: {
+        rating:{
+            required: "Bạn phải chọn một số sao để đánh giá.",
+            min: "K được để rating trống",
+        },
+        content: {
+            required: "Không được để trống nội dung",
+        },
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        if (element.attr('type') === 'hidden') { // Kiểm tra nếu là trường input ẩn
+            error.insertAfter(element); // Chèn thông báo lỗi sau trường input ẩn
+            console.log("đã vào đây")
+        } else {
+            element.closest('.form-group').append(error); // Nếu không, chèn thông báo lỗi như bình thường
+        }
+    },
+    highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+    }
+});
+
+
+
+
+

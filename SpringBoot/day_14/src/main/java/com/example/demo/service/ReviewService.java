@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entities.Movie;
 import com.example.demo.entities.Review;
 import com.example.demo.entities.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.request.UpsertReviewRequest;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.repository.ReviewRepository;
@@ -34,7 +35,7 @@ public class ReviewService {
         User user = (User) httpSession.getAttribute("user");
 
         //Kiểm tra xem movie có tồn tại hay không
-        Movie movie = movieRepository.findById(reviewRequest.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
+        Movie movie = movieRepository.findById(reviewRequest.getMovieId()).orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
 
         //Tạo review
         Review review = Review.builder()
@@ -50,13 +51,13 @@ public class ReviewService {
 
     public Review updateReview(UpsertReviewRequest reviewRequest, Integer id) {
         //Kiểm tra review xem tồn tại ko
-        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         //Kiểm tra user này có tồn tại hay ko
         User user = (User) httpSession.getAttribute("user");
 
         //Kiểm tra xem movie có tồn tại hay không
-        Movie movie = movieRepository.findById(reviewRequest.getMovieId()).orElseThrow(() -> new RuntimeException("Movie not found"));
+        Movie movie = movieRepository.findById(reviewRequest.getMovieId()).orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
 
         //Kiểm tra xem review này có của user này ko
         if (!review.getUser().getId().equals(user.getId())) {
@@ -78,7 +79,7 @@ public class ReviewService {
 
     public void deleteReview(Integer id) {
         //Kiểm tra review xem tồn tại ko
-        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         //Kiểm tra user này có tồn tại hay ko
         User user = (User) httpSession.getAttribute("user");

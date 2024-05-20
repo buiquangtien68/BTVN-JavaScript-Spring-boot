@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng ký</title>
+    <title>Đổi mật khẩu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link
             rel="stylesheet"
@@ -31,19 +31,11 @@
 
 <section class="py-4 bg-body-secondary">
     <div class="container">
-        <div class="row">
-            <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-12 ">
                 <div>
-                    <h2>Đăng ký</h2>
-                    <form id="form-register">
-                        <div class="input-group mb-3 form-group">
-                            <input type="text" class="form-control" placeholder="Nhập tên"  id="input-name" name="name">
-                            <span class="input-group-text">Name</span>
-                        </div>
-                        <div class="input-group mb-3 form-group">
-                            <input type="text" class="form-control" placeholder="Nhập email"  id="input-email" name="email">
-                            <span class="input-group-text">Email</span>
-                        </div>
+                    <h2>Đổi mật khẩu</h2>
+                    <form id="form-update">
                         <div class="password-input-container input-group mb-3 form-group">
                             <input type="password" id="passwordInput" class="form-control" placeholder="Nhập mật khẩu" name="password">
                             <span class="toggle-password input-group-text" id="togglePassword">
@@ -57,7 +49,7 @@
                             </span>
                         </div>
                         <div>
-                            <button id="btn-login" type="submit">Đăng ký</button>
+                            <button id="btn-login" type="submit">Lưu</button>
                         </div>
                     </form>
                 </div>
@@ -85,15 +77,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/common.js"></script>
 <script th:inline="javascript">
-    $('#form-register').validate({
+    $('#form-update').validate({
         rules: {
-            name: {
-              required:true,
-            },
-            email: {
-                required: true,
-                email: true,
-            },
             password: {
                 required: true,
             },
@@ -103,13 +88,6 @@
             }
         },
         messages: {
-            name:{
-                required: "Email k được để name",
-            },
-            email: {
-                required: "Email k được để trống",
-                email: "Email k đúng định dạng"
-            },
             password: {
                 required: "Mật khẩu không được để trống",
             },
@@ -130,31 +108,30 @@
             $(element).removeClass('is-invalid');
         }
     });
-
-    const formRegisterEl = document.getElementById("form-register");
-    const nameEl = document.getElementById("input-name");
-    const emailEl = document.getElementById("input-email");
+    let user = [[${session.user}]]
+    const formUpdateEl = document.getElementById("form-update");
     const  passwordEl = document.getElementById("passwordInput");
-    const passwordConfirmEl = document.getElementById("passwordInputConfirm");
 
-    formRegisterEl.addEventListener("submit", async (e)=>{
+
+    formUpdateEl.addEventListener("submit", async (e)=>{
         e.preventDefault();
 
-        if (!$('#form-register').valid()){
+        if (!$('#form-update').valid()){
             return;
         }
         const data = {
-            name: nameEl.value,
-            email: emailEl.value,
-            password: passwordEl.value
+            name: user.name,
+            email: user.email,
+            password: passwordEl.value,
+            confirmPassword:passwordEl.value,
         }
 
         // Gọi API
         try {
-            let res = await axios.post("/api/auth/register", data);
-            alert("Đăng ký thành công")
+            let res = await axios.put(`/api/auth/update/${user.id}`, data);
+            toastr.success("Cập nhật thành công")
             setTimeout(()=>{
-                window.location.href='/'
+                window.location.href='/thong-tin-ca-nhan'
             },1000)
         } catch (e) {
             console.log(e)
@@ -162,24 +139,25 @@
         }
     })
 
-   const togglePassword = document.getElementById('togglePassword');
-   const passwordInput = document.getElementById('passwordInput');
 
-   togglePassword.addEventListener('click', function() {
-       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-       passwordInput.setAttribute('type', type);
-       const spanIcon = document.getElementById("togglePassword");
-       spanIcon.innerHTML=type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
-   });
-   const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
-   const passwordInputConfirm = document.getElementById('passwordInputConfirm');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('passwordInput');
 
-   togglePasswordConfirm.addEventListener('click', function() {
-       const type = passwordInputConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
-       passwordInputConfirm.setAttribute('type', type);
-       const spanIcon = document.getElementById("togglePasswordConfirm");
-       spanIcon.innerHTML=type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
-   });
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        const spanIcon = document.getElementById("togglePassword");
+        spanIcon.innerHTML=type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+    });
+    const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+    const passwordInputConfirm = document.getElementById('passwordInputConfirm');
+
+    togglePasswordConfirm.addEventListener('click', function() {
+        const type = passwordInputConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInputConfirm.setAttribute('type', type);
+        const spanIcon = document.getElementById("togglePasswordConfirm");
+        spanIcon.innerHTML=type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+    });
 </script>
 </body>
 </html>

@@ -1,13 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.entities.Blog;
-import com.example.demo.entities.Genre;
-import com.example.demo.entities.Movie;
+import com.example.demo.entities.*;
 import com.example.demo.model.enums.MovieType;
-import com.example.demo.service.BlogService;
-import com.example.demo.service.EpisodeService;
-import com.example.demo.service.MovieService;
-import com.example.demo.service.ReviewService;
+import com.example.demo.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class MovieController {
@@ -32,9 +25,13 @@ public class MovieController {
     EpisodeService episodeService;
     @Autowired
     ReviewService reviewService;
+    @Autowired
+    FavoriteService favoriteService;
+    @Autowired
+    private HttpSession httpSession;
 
 
-   @GetMapping("/")
+    @GetMapping("/")
     public String index(Model model) {
        List<Blog> ListBlog =blogService.getBlogByStatus(true,1,4).getContent();
        List<Movie> listPhimHot =movieService.findByStatus(true);
@@ -87,6 +84,16 @@ public class MovieController {
             String rdGenre = genres.get(random.nextInt(genres.size())).getName();
             model.addAttribute("ListPhimDeCu",movieService.findByGenreNameOrderByRatingDescExcludingMovieId(rdGenre,id));
         }
+        if (httpSession.getAttribute("user") != null) {
+            User user = (User) httpSession.getAttribute("user");
+            model.addAttribute("favorites", favoriteService.findByUser_IdOrderByCreatedAtDesc(user.getId()));
+            Favorite favorite = favoriteService.findByUser_IdOrderByCreatedAtDesc(user.getId()).stream()
+                    .filter(f -> f.getMovie().getId() == id)
+                    .findFirst()
+                    .orElse(null); // hoặc giá trị mặc định khác nếu cần
+            model.addAttribute("favorite", favorite);
+        }
+
        return "chi-tiet-phim";
     }
 
@@ -97,6 +104,23 @@ public class MovieController {
     @GetMapping("/dang-ky")
     public String dangKy(Model model) {
        return "dang-ky";
+    }
+    @GetMapping("/thong-tin-ca-nhan")
+    public String thongTinCaNhan(Model model) {
+        return "thong-tin-ca-nhan";
+    }
+    @GetMapping("/doi-mat-khau")
+    public String doiMatKhau(Model model) {
+        return "doi-mat-khau";
+    }
+
+
+    @GetMapping("/phim-yeu-thich")
+    public String phimYeuThich(Model model,@RequestParam(required = false,defaultValue = "1") int page, @RequestParam(required = false,defaultValue = "12") int pageSize) {
+        Page<Favorite> pageData =favoriteService.findByUser_IdOrderByCreatedAtDesc(page,pageSize);
+        model.addAttribute("pageData",pageData);
+        model.addAttribute("currentPage",page);
+        return "phim-yeu-thich";
     }
 
 }

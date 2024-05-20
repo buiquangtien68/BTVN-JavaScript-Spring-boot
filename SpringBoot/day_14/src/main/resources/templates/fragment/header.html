@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header class="bg-dark">
+    <!--sdasdasdsad-->
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img src="https://motchilltv.ac/_ipx/s_150x35/logo.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active text-white" th:href="@{/}">Trang chủ</a>
+                    <a class="nav-link text-white" th:href="@{/phim-bo}">Phim bộ</a>
+                    <a class="nav-link text-white" th:href="@{/phim-le}">Phim lẻ</a>
+                    <a class="nav-link  text-white"  th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
+                    <a class="nav-link  text-white"  th:href="@{/tin-tuc}">Tin tức</a>
+                </div>
+                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user == null}">
+                    <a class="nav-link  text-white"  th:href="@{/dang-nhap}">Đăng nhập</a>
+                </div>
+                <div class="navbar-nav"  style="margin-left: auto;" th:if="${session.user != null}">
+                    <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${session.user.name}">
+                            Dropdown link
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" th:if="${session.user.role.toString().equals('ADMIN')}">Trang quản trị</a></li>
+                            <li><a class="dropdown-item" th:href="@{/thong-tin-ca-nhan}">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item" href="#">Lịch sử xem phim</a></li>
+                            <li><a class="dropdown-item" th:href="@{/phim-yeu-thich}">Phim yêu thích</a></li>
+                            <li><a class="dropdown-item" onclick="logout()"  type="button">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

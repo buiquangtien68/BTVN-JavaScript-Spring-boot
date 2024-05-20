@@ -38,4 +38,9 @@ public class MovieService {
     public Optional<Movie> getMovieById(Integer id) {
         return movieRepository.findById(id);
     }
+
+    public Page<Movie> getFavoriteMovie(MovieType type, Boolean status, int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page-1, pageSize, Sort.by("createdAt").descending());
+        return movieRepository.findByTypeAndStatus(type,status,pageRequest);
+    }
 }
