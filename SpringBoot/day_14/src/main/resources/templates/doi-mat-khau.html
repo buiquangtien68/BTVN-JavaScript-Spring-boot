@@ -37,7 +37,13 @@
                     <h2>Đổi mật khẩu</h2>
                     <form id="form-update">
                         <div class="password-input-container input-group mb-3 form-group">
-                            <input type="password" id="passwordInput" class="form-control" placeholder="Nhập mật khẩu" name="password">
+                            <input type="password" id="oldPasswordInput" class="form-control" placeholder="Nhập mật khẩu cũ" name="oldPassword">
+                            <span class="toggle-password input-group-text" id="toggleOldPassword">
+                            <i class="fa-solid fa-eye"></i>
+                            </span>
+                        </div>
+                        <div class="password-input-container input-group mb-3 form-group">
+                            <input type="password" id="passwordInput" class="form-control" placeholder="Nhập mật khẩu mới" name="password">
                             <span class="toggle-password input-group-text" id="togglePassword">
                             <i class="fa-solid fa-eye"></i>
                             </span>
@@ -79,6 +85,9 @@
 <script th:inline="javascript">
     $('#form-update').validate({
         rules: {
+            oldPassword: {
+                required: true,
+            },
             password: {
                 required: true,
             },
@@ -88,12 +97,15 @@
             }
         },
         messages: {
+            oldPassword: {
+                required: "Mật khẩu cũ không được để trống",
+            },
             password: {
-                required: "Mật khẩu không được để trống",
+                required: "Mật khẩu mới không được để trống",
             },
             confirmPassword:{
                 required:"Mật khẩu không được để trống",
-                equalTo: "Mật khẩu xác nhận không giống với mật khẩu",
+                equalTo: "Mật khẩu xác nhận không giống với mật khẩu mới",
             }
         },
         errorElement: 'span',
@@ -110,8 +122,9 @@
     });
     let user = [[${session.user}]]
     const formUpdateEl = document.getElementById("form-update");
-    const  passwordEl = document.getElementById("passwordInput");
-
+    let  passwordEl = document.getElementById("passwordInput");
+    let confirmPasswordEl = document.getElementById("passwordInputConfirm")
+    let oldPasswordEl = document.getElementById("oldPasswordInput")
 
     formUpdateEl.addEventListener("submit", async (e)=>{
         e.preventDefault();
@@ -120,25 +133,33 @@
             return;
         }
         const data = {
-            name: user.name,
-            email: user.email,
-            password: passwordEl.value,
-            confirmPassword:passwordEl.value,
+            oldPassword: oldPasswordEl.value,
+            newPassword: passwordEl.value,
+            confirmPassword:confirmPasswordEl.value,
         }
 
         // Gọi API
         try {
-            let res = await axios.put(`/api/auth/update/${user.id}`, data);
+            let res = await axios.put(`/api/auth/update-password/${user.id}`, data);
             toastr.success("Cập nhật thành công")
             setTimeout(()=>{
                 window.location.href='/thong-tin-ca-nhan'
             },1000)
         } catch (e) {
             console.log(e)
-            toastr.error("Email đã tồn tại")
+            toastr.error("Mật khẩu cũ sai hoặc Mật khẩu mới và mật khẩu cũ giống nhau")
         }
     })
 
+    const toggleOldPassword= document.getElementById('toggleOldPassword');
+    const oldPasswordInput = document.getElementById('oldPasswordInput');
+
+    toggleOldPassword.addEventListener('click', function() {
+        const type = oldPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        oldPasswordInput.setAttribute('type', type);
+        const spanIcon = document.getElementById("toggleOldPassword");
+        spanIcon.innerHTML=type === 'password' ? '<i class="fa-solid fa-eye"></i>' : '<i class="fa-solid fa-eye-slash"></i>';
+    });
 
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('passwordInput');

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class FavoriteApi {
     private final FavoriteService favoriteService;
 
-    @PostMapping
+    @PutMapping
     public ResponseEntity<?> createFavorite(@Valid @RequestBody FavoriteRequest favoriteRequest) {
         Favorite favorite = favoriteService.createFavorite(favoriteRequest);
         return new ResponseEntity<>(favorite, HttpStatus.CREATED); //201

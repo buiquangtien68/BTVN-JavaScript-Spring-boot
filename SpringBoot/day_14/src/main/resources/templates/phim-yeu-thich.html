@@ -6,7 +6,32 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .btnCloseDiv {
+            position: relative;
+            display: inline-block;
+        }
+        .btnCloseDiv.hidden {
+            display: none;
+        }
+        #close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1;
+            color: red;
+        }
+
+        #close-btn:hover {
+            color: red;
+        }
+    </style>
 </head>
+
 <body>
 <th:block th:replace="~{/fragment/header :: header}"></th:block>
 
@@ -15,13 +40,14 @@
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h3>Danh sách phim yêu thích</h3>
         </div>
-        <div class="row">
-            <div class="col-2" th:each="favorite :${pageData.getContent()}">
-                <div class="movie-item">
-                    <div class="movie-poster overflow-hidden">
+        <div class="row movie-list">
+            <div class="col-2 " th:each="favorite :${pageData.getContent()}">
+                <div class="movie-item btnCloseDiv">
+                    <div class="movie-poster overflow-hidden ">
                         <a th:href="@{/phim/{id}/{slug}(id=${favorite.getMovie().getId()}, slug=${favorite.getMovie().getSlug()})}">
                             <img class="w-100 h-100 rounded " th:src="${favorite.getMovie().getPoster()}" alt="movie-poster">
                         </a>
+                        <button id="close-btn" th:onclick="'closeImage('+${favorite.getMovie().getId()}+')'">&#10006;</button>
                     </div>
                     <a style="text-decoration: none; color: black" th:href="@{/phim/{id}/{slug}(id=${favorite.getMovie().getId()}, slug=${favorite.getMovie().getSlug()})}">
                         <p class="mt-2" th:text="${favorite.getMovie().getName()}"></p>
@@ -67,5 +93,48 @@
 ></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/js/common.js"></script>
+<script th:inline="javascript">
+    let favorites = [[${pageData.getContent()}]]
+    const movieList = document.querySelector(".movie-list")
+    const renderFavoriteList = favorites =>{
+        let html=""
+        favorites.forEach(favorite =>{
+            html+=`
+             <div class="col-2">
+                 <div class="movie-item btnCloseDiv">
+                        <div class="movie-poster overflow-hidden ">
+                            <a href="/phim/${favorite.movie.id}/${favorite.movie.slug}">
+                                <img class="w-100 h-100 rounded " src="${favorite.movie.poster}" alt="movie-poster">
+                            </a>
+                            <button id="close-btn" onclick="closeImage(${favorite.movie.id})">&#10006;</button>
+                        </div>
+                        <a style="text-decoration: none; color: black" href="/phim/${favorite.movie.id}/${favorite.movie.slug}">
+                            <p class="mt-2" >${favorite.movie.name}</p>
+                        </a>
+                    </div>
+                 </div>
+            `
+        })
+        movieList.innerHTML=html
+    }
+    const btnClose = document.getElementById("close-btn")
+    const closeImage = async (id) => {
+        const confirm = window.confirm("Bạn có chắc chắn muốn xóa ko")
+        if(confirm){
+            try {
+                const deleteFavor = await axios.delete(`/api/favorites/${id}`)
+                console.log("Sự kiện xóa Favor")
+                console.log(favorites)
+                favorites=favorites.filter(f=>f.movie.id !==id)
+                renderFavoriteList(favorites)
+                toastr.success("Xóa khỏi danh sách yêu thích thành công")
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+    }
+</script>
 </body>
 </html>

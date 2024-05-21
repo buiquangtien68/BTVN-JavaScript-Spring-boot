@@ -53,12 +53,11 @@ public class FavoriteService {
         return favorite;
     }
 
-    public void deleteReview(Integer id) {
-        //Kiểm tra review xem tồn tại ko
-        Favorite favorite = favoriteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
-
+    public void deleteReview(Integer movieid) {
         //Kiểm tra user này có tồn tại hay ko
         User user = (User) httpSession.getAttribute("user");
+        //Kiểm tra review xem tồn tại ko
+        Favorite favorite = favoriteRepository.findByMovie_IdAndUser_Id(movieid,user.getId()).orElseThrow(() -> new ResourceNotFoundException("Favorite not found"));
 
         //Kiểm tra xem review này có của user này ko
         if (!favorite.getUser().getId().equals(user.getId())) {

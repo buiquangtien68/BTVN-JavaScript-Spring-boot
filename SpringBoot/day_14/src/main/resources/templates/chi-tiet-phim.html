@@ -75,9 +75,9 @@
                         Rating: <th:block th:text="${movie.getRating()}"></th:block> <i class="fas fa-star" style="color: #ffd43b"></i>
                     </p>
 
-                    <div >
+                    <div id="btnFavoriteGroup">
                         <button id="watchButton" style="background-color: red;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Xem phim</button>
-                        <button th:if="${session.user !=null}" id="favoriteButton" class="favorite-btn" th:onclick="toggleFavorite()"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"><th:block th:if="${favorite != null}">Bỏ yêu thích</th:block><th:block th:unless="${favorite != null}">Yêu thích</th:block></button>
+                        <button th:if="${session.user !=null}" id="favoriteButton" class="favorite-btn" th:onclick="${favorite != null} ? 'toggleFavorite(' + ${movie.getId()} + ')' : 'toggleFavorite()'"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"><th:block th:if="${favorite != null}">Bỏ yêu thích</th:block><th:block th:unless="${favorite != null}">Yêu thích</th:block></button>
                         <button th:if="${session.user ==null}" id="favoriteButtonAnnotation" class="favorite-btn"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Yêu thích</button>
                     </div>
                 </div>

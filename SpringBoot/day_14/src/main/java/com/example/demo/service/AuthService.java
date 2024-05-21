@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
 
-import com.example.demo.entities.Movie;
-import com.example.demo.entities.Review;
 import com.example.demo.entities.User;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.enums.UserRole;
 import com.example.demo.model.request.LoginRequest;
 import com.example.demo.model.request.RegisterRequest;
-import com.example.demo.model.request.UpsertReviewRequest;
+import com.example.demo.model.request.UpdatePasswordRequest;
+import com.example.demo.model.request.UpdateProfileUserRequest;
 import com.example.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +47,9 @@ public class AuthService {
         if (registerRequest.getPassword() == null){
             throw new BadRequestException("Password is required");
         }
+        if (!registerRequest.getConfirmPassword().equals(registerRequest.getPassword())){
+            throw new BadRequestException("Passwords do not match");
+        }
 
         //Lưu password vào database cần mã hóa password
         User user = User.builder()
@@ -63,28 +65,44 @@ public class AuthService {
         return user;
     }
 
-    public User updateUser(RegisterRequest registerRequest, Integer id) {
+    public User updateProfile(UpdateProfileUserRequest updateProfileUserRequest, Integer id) {
         //Kiểm tra user này có tồn tại hay ko
         User user = (User) httpSession.getAttribute("user");
         if (!Objects.equals(user.getId(), id)){
             throw new ResourceNotFoundException("User not found");
         }
 
-        //Cần kiểm tra email đã tồn tại hay chưa
-        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent() && !registerRequest.getEmail().equals(user.getEmail())){
-            throw new BadRequestException("Email is already in use");
-        }
-        user.setAvatar("https://placehold.co/600x400?text="+ registerRequest.getName().charAt(0));
-        user.setName(registerRequest.getName());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(bcryptPasswordEncoder.encode(registerRequest.getPassword()));
+        user.setName(updateProfileUserRequest.getName());
         user.setUpdatedAt(LocalDate.now());
         userRepository.save(user);
         return user;
+    }
 
+    public User updatePassword(UpdatePasswordRequest updatePasswordRequest, Integer id) {
+        //Kiểm tra user này có tồn tại hay ko
+        User user = (User) httpSession.getAttribute("user");
+        if (!Objects.equals(user.getId(), id)){
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        if (!bcryptPasswordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new BadRequestException("Mật khẩu cũ sai");
+        }
+        if (!updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmPassword())){
+            throw new BadRequestException("Mật khẩu mới và mật khẩu confirm khác nhau");
+        }
+
+        if (updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getOldPassword())){
+            throw new BadRequestException("Mật khẩu mới và mật khẩu cũ giống nhau");
+        }
+        user.setPassword(bcryptPasswordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+        return user;
     }
 
     public void logout() {
         httpSession.setAttribute("user", null);
     }
+
+
 }

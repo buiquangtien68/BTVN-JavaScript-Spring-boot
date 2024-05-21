@@ -146,13 +146,14 @@
         const data = {
             name: nameEl.value,
             email: emailEl.value,
-            password: passwordEl.value
+            password: passwordEl.value,
+            confirmPassword: passwordConfirmEl.value
         }
 
         // Gọi API
         try {
             let res = await axios.post("/api/auth/register", data);
-            alert("Đăng ký thành công")
+            toastr.success("Đăng ký thành công")
             setTimeout(()=>{
                 window.location.href='/'
             },1000)

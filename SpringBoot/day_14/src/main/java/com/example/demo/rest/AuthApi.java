@@ -1,14 +1,13 @@
 package com.example.demo.rest;
 
-import com.example.demo.entities.Review;
 import com.example.demo.entities.User;
 import com.example.demo.model.request.LoginRequest;
 import com.example.demo.model.request.RegisterRequest;
-import com.example.demo.model.request.UpsertReviewRequest;
+import com.example.demo.model.request.UpdatePasswordRequest;
+import com.example.demo.model.request.UpdateProfileUserRequest;
 import com.example.demo.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +30,14 @@ public class AuthApi {
         return ResponseEntity.ok("Logged in successfully");
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody RegisterRequest registerRequest, @Valid @PathVariable Integer id) {
-        User user = authService.updateUser(registerRequest,id);
+    @PutMapping("/update-profile/{id}")
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UpdateProfileUserRequest updateProfileUserRequest, @Valid @PathVariable Integer id) {
+        User user = authService.updateProfile(updateProfileUserRequest,id);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+    @PutMapping("/update-password/{id}")
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest, @Valid @PathVariable Integer id) {
+        User user = authService.updatePassword(updatePasswordRequest,id);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
