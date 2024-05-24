@@ -23,13 +23,33 @@ public class BlogController {
         Page<Blog> pageData = blogService.getBlogByStatus(true,page,pageSize);
         model.addAttribute("pageData",pageData);
         model.addAttribute("currentPage",page);
-        return "tin-tuc";
+        return "web/tin-tuc";
     }
 
     @GetMapping("/tin-tuc/{id}/{slug}")
     public String chiTietBlog(@PathVariable int id, @PathVariable String slug, Model model) {
         model.addAttribute("blog",blogService.getBlogByIdAndSlugAndStatus(id,slug,true));
         model.addAttribute("comments",commentService.findByBlog_IdOrderByCreatedAtDesc(id));
-        return "chi-tiet-blog";
+        return "web/chi-tiet-blog";
+    }
+
+    @GetMapping("/admin/blogs")
+    public String getIndexPage(Model model) {
+        model.addAttribute("blogs", blogService.getAll());
+        return "admin/blog/blog-index";
+    }
+    @GetMapping("/admin/blogs/own-blogs")
+    public String getOwnBlogPage(Model model) {
+        model.addAttribute("blogs", blogService.getAllByUserIdOrderByCreatedAtDesc());
+        return "admin/blog/blog-yourself";
+    }
+    @GetMapping("/admin/blogs/create")
+    public String getCreatePage() {
+        return "admin/blog/blog-create";
+    }
+    @GetMapping("/admin/blogs/{id}")
+    public String getDetailPage(@PathVariable int id, Model model) {
+        model.addAttribute("blog",blogService.getBlogById(id));
+        return "admin/blog/blog-detail";
     }
 }

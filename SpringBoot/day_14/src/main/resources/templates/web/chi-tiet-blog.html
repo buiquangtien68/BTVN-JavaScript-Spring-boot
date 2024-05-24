@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<th:block th:replace="~{web/fragment/header :: header}"></th:block>
+
+<section class="py-4 bg-body-secondary">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item text-body-tertiary"><a th:href="@{/}">Motchill</a></li>
+                    <li class="breadcrumb-item text-body-tertiary"><a th:href="@{/tin-tuc}">Tin tức</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="${blog.getTitle()}">Top 10 Bộ Phim Hoa Ngữ Sắp Chiếu Năm 2024</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div>
+                    <h2 th:text="${blog.getTitle()}">Top 10 Bộ Phim Hoa Ngữ Sắp Chiếu Năm 2024</h2>
+                    <p class="text-body-tertiary" >by Motchill on <th:block th:text="${blog.getCreatedAt()}"></th:block>
+                        </p>
+                </div>
+                <div th:text="${blog.getContent()}">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-4 bg-body-secondary">
+    <div class="container bg-dark-subtle rounded-4 p-4">
+        <div class="comment-card">
+            <h2>Bình luận</h2>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Để lại bình luận..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-secondary text-white" type="button" id="button-addon2">Bình luận</button>
+            </div>
+            <hr class="bg-light">
+            <div class="row">
+                <div class="col-12">
+                    <div class="comment-info bg-light-subtle rounded-5 p-3 mt-3" th:each="comment :${comments}">
+                        <div class="d-flex align-items-center">
+                            <img th:src="${comment.getUser().getAvatar()}" alt="Avatar" class="rounded-circle" style="width: 50px; height: 50px;">
+                            <h5 class="ms-2" th:text="${comment.getUser().getName()}">Người Bình Luận</h5>
+                            <p class="pt-2 ms-2 text-body-tertiary" th:text="${comment.getCreatedAt()}"><small>2 ngày trước</small></p>
+                        </div>
+                        <div class="comment-content ps-1 pt-2" th:text="${comment.getContent()}">
+                            <p>Phim diễn biến chậm. Được mấy tập cuối là cuốn. Mấy tập đầu tới giũa tua nhanh chút.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{web/fragment/footer :: footer}"></th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js" integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/web-assets/js/common.js"></script>
+
+</body>
+</html>

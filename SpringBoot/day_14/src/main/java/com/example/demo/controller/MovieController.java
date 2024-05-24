@@ -6,7 +6,6 @@ import com.example.demo.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +42,7 @@ public class MovieController {
        model.addAttribute("ListPhimLe",listPhimLe);
        model.addAttribute("ListPhimChieuRap",listPhimChieuRap);
        model.addAttribute("ListBlog",ListBlog);
-        return "index";
+        return "web/index";
     }
 
     @GetMapping("/phim-bo")
@@ -51,7 +50,7 @@ public class MovieController {
         Page<Movie> pageData =movieService.getMovieByType(MovieType.PHIM_BO,true,page,pageSize);
         model.addAttribute("pageData",pageData);
         model.addAttribute("currentPage",page);
-        return "phim-bo";
+        return "web/phim-bo";
     }
 
     @GetMapping("/phim-le")
@@ -59,7 +58,7 @@ public class MovieController {
         Page<Movie> pageData =movieService.getMovieByType(MovieType.PHIM_LE,true,page,pageSize);
         model.addAttribute("pageData",pageData);
         model.addAttribute("currentPage",page);
-        return "phim-le";
+        return "web/phim-le";
     }
 
     @GetMapping("/phim-chieu-rap")
@@ -67,7 +66,7 @@ public class MovieController {
         Page<Movie> pageData =movieService.getMovieByType(MovieType.PHIM_CHIEU_RAP,true,page,pageSize);
         model.addAttribute("pageData",pageData);
         model.addAttribute("currentPage",page);
-        return "phim-chieu-rap";
+        return "web/phim-chieu-rap";
     }
 
     @GetMapping("/phim/{id}/{slug}")
@@ -94,24 +93,24 @@ public class MovieController {
             model.addAttribute("favorite", favorite);
         }
 
-       return "chi-tiet-phim";
+       return "web/chi-tiet-phim";
     }
 
     @GetMapping("/dang-nhap")
     public String dangNhap(Model model) {
-       return "dang-nhap";
+       return "web/dang-nhap";
     }
     @GetMapping("/dang-ky")
     public String dangKy(Model model) {
-       return "dang-ky";
+       return "web/dang-ky";
     }
     @GetMapping("/thong-tin-ca-nhan")
     public String thongTinCaNhan(Model model) {
-        return "thong-tin-ca-nhan";
+        return "web/thong-tin-ca-nhan";
     }
     @GetMapping("/doi-mat-khau")
     public String doiMatKhau(Model model) {
-        return "doi-mat-khau";
+        return "web/doi-mat-khau";
     }
 
 
@@ -120,7 +119,7 @@ public class MovieController {
         Page<Favorite> pageData =favoriteService.findByUser_IdOrderByCreatedAtDesc(page,pageSize);
         model.addAttribute("pageData",pageData);
         model.addAttribute("currentPage",page);
-        return "phim-yeu-thich";
+        return "web/phim-yeu-thich";
     }
 
 }
