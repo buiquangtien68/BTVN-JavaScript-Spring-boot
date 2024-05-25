@@ -14,9 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BlogService {
@@ -24,6 +27,8 @@ public class BlogService {
     private BlogRepository blogRepository;
     @Autowired
     private HttpSession httpSession;
+    @Autowired
+    private FileService fileService;
 
     public Page<Blog> getBlogByStatus(Boolean status, int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page-1, pageSize, Sort.by("createdAt").descending());
@@ -97,5 +102,19 @@ public class BlogService {
         }
 
         blogRepository.delete(blog);
+    }
+
+    public String uploadThumbnail(Integer id, MultipartFile file) {
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog not found"));
+        try {
+            Map data = fileService.uploadFile(file);
+            String url = (String) data.get("url");
+            blog.setThumbnail(url);
+            blogRepository.save(blog);
+
+            return url;
+        }catch (IOException e) {
+            throw new RuntimeException("Error while uploading thumbnail");
+        }
     }
 }
