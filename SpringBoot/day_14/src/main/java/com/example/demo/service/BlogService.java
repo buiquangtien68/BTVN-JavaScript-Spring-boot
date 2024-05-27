@@ -40,6 +40,7 @@ public class BlogService {
     public List<Blog> getAll() {
         return blogRepository.findAll(Sort.by("createdAt").descending());
     }
+
     public List<Blog> getAllByUserIdOrderByCreatedAtDesc() {
      User user = (User) httpSession.getAttribute("user");
         return blogRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());

@@ -35,10 +35,10 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <th:block th:replace="~{admin/blog/fragment/navbar :: nav}"></th:block>
+        <th:block th:replace="~{admin/fragment/navbar :: nav}"></th:block>
 
         <!-- Main Sidebar Container -->
-        <th:block th:replace="~{admin/blog/fragment/sidebar :: aside}"></th:block>
+        <th:block th:replace="~{admin/fragment/sidebar :: aside}"></th:block>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -120,16 +120,14 @@
                                                         </option>
                                                     </select>
                                                 </div>
-                                                <div class="thumbnail-preview-container mb-3">
-                                                    <img src="https://media.techmaster.vn/api/static/9479/c6iesrs51cof74mrqnfg" alt="" id="thumbnail">
-                                                </div>
                                                 <div class="form-group">
                                                     <div class="thumbnail-preview-container mb-3">
-                                                        <img src="" alt="" id="thumbnail">
+                                                        <img src="https://media.techmaster.vn/api/static/9479/c6iesrs51cof74mrqnfg" alt="" id="thumbnail">
                                                     </div>
-                                                    <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal-xl">
+                                                    <label for="input-thumbnail" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal-xl">
                                                         Chọn hình ảnh
-                                                    </button>
+                                                    </label>
+                                                    <input type="file" id="input-thumbnail" class="d-none">
                                                 </div>
                                             </div>
                                         </div>
@@ -212,6 +210,8 @@
         //
         // initData(blog);
 
+
+
         // Summernote
         $('#content').summernote({
             height: 600,                 // set editor height
@@ -242,7 +242,7 @@
             }
             // Gọi API
             try {
-                let res = await axios.put(`/api/blogs/${blog.id}`, data);
+                let res = await axios.put(`/api/admin/blogs/${blog.id}`, data);
                 toastr.success("Cập nhật blog thành công")
             } catch (e) {
                 console.log(e)
@@ -254,7 +254,7 @@
             const confirm = window.confirm("Bạn có chắc chắn muốn xóa ko")
             if(confirm){
                 try {
-                    const deleteRv = await axios.delete(`/api/blogs/${blog.id}`)
+                    const deleteRv = await axios.delete(`/api/admin/blogs/${blog.id}`)
                     console.log("Sự kiện xóa blog")
                     toastr.success("Xóa thành công đánh giá")
                     setTimeout(()=>{
@@ -265,6 +265,7 @@
                 }
             }
         })
+
         $('#form-blog').validate({
             rules: {
                 title: {
@@ -309,6 +310,29 @@
                 $(element).removeClass('is-invalid');
             }
         });
+
+
+
+        //Upload Image
+        const inputThumbnailEl = document.getElementById("input-thumbnail")
+        const thumbnailEl = document.getElementById("thumbnail")
+        inputThumbnailEl.addEventListener("change",async (event) =>{
+            //lấy file upload
+            const files = event.target.files;
+
+            //Tạo đối tượng form data
+            const formData = new FormData();
+            formData.append("file",files[0])
+
+            //Gọi API
+            try {
+                let res = await axios.post(`/api/admin/blogs/${blog.id}/upload-thumbnail`,formData)
+                console.log(res)
+                thumbnailEl.src = res.data;
+            }catch (e){
+                console.log(e)
+            }
+        })
     </script>
     <script src="/web-assets/js/common.js"></script>
 </body>

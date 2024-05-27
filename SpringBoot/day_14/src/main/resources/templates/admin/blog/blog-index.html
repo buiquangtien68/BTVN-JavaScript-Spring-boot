@@ -31,10 +31,10 @@
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
 		<!-- Navbar -->
-		<th:block th:replace="~{admin/blog/fragment/navbar :: nav}"></th:block>
+		<th:block th:replace="~{admin/fragment/navbar :: nav}"></th:block>
 
 		<!-- Main Sidebar Container -->
-		<th:block th:replace="~{admin/blog/fragment/sidebar :: aside}"></th:block>
+		<th:block th:replace="~{admin/fragment/sidebar :: aside}"></th:block>
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -78,7 +78,7 @@
 											<tr>
 												<th>Tiêu đề</th>
 												<th>Tác giả</th>
-												<th>Danh mục</th>
+												<th>Mô tả ngắn</th>
 												<th>Trạng thái</th>
 												<th>Ngày tạo</th>
 											</tr>
@@ -104,8 +104,6 @@
 											</tr>
 										</tbody>
 									</table>
-
-
 								</div>
 							</div>
 						</div>

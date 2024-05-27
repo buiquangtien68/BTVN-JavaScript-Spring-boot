@@ -35,10 +35,10 @@
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
     <!-- Navbar -->
-    <th:block th:replace="~{admin/blog/fragment/navbar :: nav}"></th:block>
+    <th:block th:replace="~{admin/fragment/navbar :: nav}"></th:block>
 
     <!-- Main Sidebar Container -->
-    <th:block th:replace="~{admin/blog/fragment/sidebar :: aside}"></th:block>
+    <th:block th:replace="~{admin/fragment/sidebar :: aside}"></th:block>
 
 
     <!-- Content Wrapper. Contains page content -->
@@ -122,9 +122,10 @@
                             <div class="thumbnail-preview-container mb-3">
                               <img src="" alt="" id="thumbnail">
                             </div>
-                            <button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal-xl">
+                            <label for="input-thumbnail" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal-xl">
                               Chọn hình ảnh
-                            </button>
+                            </label>
+                            <input type="file" id="input-thumbnail" class="d-none">
                           </div>
                         </div>
 
@@ -169,7 +170,7 @@
 
   <script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
 
-  <script>
+  <script th:inline="javascript">
     // //Initialize Select2 Elements
     // $(".select2").select2();
     //
@@ -216,8 +217,11 @@
       }
       // Gọi API
       try {
-        let res = await axios.post("/api/blogs", data);
+        let res = await axios.post("/api/admin/blogs", data);
         toastr.success("Tạo blog thành công")
+        setTimeout(()=>{
+          window.location.href='/admin/blogs'
+        },1000)
       } catch (e) {
         console.log(e)
         toastr.error(e.response.data.message);

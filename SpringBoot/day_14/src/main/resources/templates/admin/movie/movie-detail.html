@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AdminLTE 3 | Dashboard</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/admin-assets/plugins/fontawesome-free/css/all.min.css" />
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/admin-assets/dist/css/adminlte.min.css" />
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="/admin-assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css" />
+
+    <!--Summernote-->
+    <link rel="stylesheet" href="/admin-assets/plugins/summernote/summernote-bs4.min.css">
+
+    <!--Toastr-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <!-- Navbar -->
+    <th:block th:replace="~{admin/fragment/navbar :: nav}"></th:block>
+
+    <!-- Main Sidebar Container -->
+    <th:block th:replace="~{admin/fragment/sidebar :: aside}"></th:block>
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="#">Movie</a>
+                            </li>
+                            <li class="breadcrumb-item active" th:text="${movie.getName()}">
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+
+                <div class="row py-2">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-default">
+                            <i class="fas fa-chevron-left"></i> Quay lại
+                        </button>
+                        <button type="button" class="btn btn-info px-4" id="btnUpdateMovie">
+                            Lưu
+                        </button>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <button type="button" class="btn btn-danger px-4" id="btnDeleteMovie">
+                            Xóa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <form id="form-movie">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Tên phim</label>
+                                                <input type="text" class="form-control" id="name" name="name" th:value="${movie.getName()}"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Trailer URL</label>
+                                                <input type="text" class="form-control" id="trailer" name="trailer" th:value="${movie.getTrailer()}"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Mô tả ngắn</label>
+                                                <textarea id="description" class="form-control" rows="3" name="description" th:text="${movie.getDescription()}"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Thể loại</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple"
+                                                            id="genre">
+                                                        <option th:each="genre :${genres}" th:text="${genre.name}" th:value="${genre.id}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Đạo diễn</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple"
+                                                            id="director">
+                                                        <option th:each="director :${directors}" th:text="${director.name}" th:value="${director.id}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Diễn viên</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple"
+                                                            id="actor">
+                                                        <option th:each="actor :${actors}" th:text="${actor.name}" th:value="${actor.id}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Trạng thái</label>
+                                                <select id="status" class="form-control" th:value="${movie.getStatus()? '1':'0'}">
+                                                    <option value="0" th:selected="${!movie.getStatus()}">
+                                                        Ẩn
+                                                    </option>
+                                                    <option value="1" th:selected="${movie.getStatus()}">
+                                                        Công khai
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Release Year</label>
+                                                <input type="text" class="form-control" id="releaseYear" name="releaseYear" th:value="${movie.getReleaseYear()}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Thể loại phim</label>
+                                                <select id="movieType" class="form-control" th:value="${movie.getType()}">
+                                                    <option th:each="type : ${movieType}" th:value="${type}" th:text="${type}" th:selected="${type==movie.getType()}" >
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Quốc gia</label>
+                                                <select id="country" class="form-control" th:value="${movie.getCountry().getId()}">
+                                                    <option th:each="country : ${countries}" th:value="${country.id}" th:text="${country.name}" th:selected="${country.id == movie.country.id}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="thumbnail-preview-container mb-3">
+                                                    <img src="" alt="" id="poster">
+                                                </div>
+                                                <label for="input-poster" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal-xl">
+                                                    Chọn hình ảnh
+                                                </label>
+                                                <input type="file" id="input-poster" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/admin-assets/plugins/jquery/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js" integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--Axios-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<!-- Bootstrap 4 -->
+<script src="/admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- overlayScrollbars -->
+<script src="/admin-assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+<!-- AdminLTE App -->
+<script src="/admin-assets/dist/js/adminlte.js"></script>
+
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+
+//Summernote
+<script src="/admin-assets/plugins/summernote/summernote-bs4.min.js"></script>
+
+<script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+
+<script th:inline="javascript">
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    let currentMovie = [[${movie}]]
+    console.log(currentMovie)
+
+    let genreList = currentMovie.genres;
+    genreList=genreList.map(genre => genre.id.toString())
+    $('#genre').val(genreList);
+    $('#genre').trigger('change');
+
+    let directorList = currentMovie.directors;
+    directorList=directorList.map(director => director.id.toString())
+    $('#director').val(directorList);
+    $('#director').trigger('change');
+
+    let actorList = currentMovie.actors;
+    actorList=actorList.map(actor => actor.id.toString())
+    $('#actor').val(actorList);
+    $('#actor').trigger('change');
+
+    // // Initialize editor
+    // const easyMDE = new EasyMDE({
+    //     element: document.getElementById("content"),
+    //     spellChecker: false,
+    //     maxHeight: "500px",
+    //     renderingConfig: {
+    //         codeSyntaxHighlighting: true,
+    //     },
+    // });
+
+
+    // // Summernote
+    // $('#content').summernote({
+    //     height: 600,                 // set editor height
+    //     minHeight: null,             // set minimum height of editor
+    //     maxHeight: null,             // set maximum height of editor
+    //     focus: true,                 // set focus to editable area after initializing summernote
+    //     disableLinkTarget: true
+    // });
+
+    //Update movie
+    let nameEl = document.getElementById("name")
+    let trailerEl = document.getElementById("trailer")
+    let descriptionEl = document.getElementById("description")
+    let statusEl = document.getElementById("status")
+    let releaseYearEl = document.getElementById("releaseYear")
+    let movieTypeEl = document.getElementById("movieType")
+    let countryEl = document.getElementById("country")
+    const btnCreateMovie = document.getElementById("btnUpdateMovie")
+    const btnDeleteMovie = document.getElementById("btnDeleteMovie")
+    btnCreateMovie.addEventListener("click", async (e)=>{
+        e.preventDefault()
+        console.log("Đã ấn nút")
+
+        if (!$('#form-movie').valid()){
+            return;
+        }
+
+        const data = {
+            name: nameEl.value,
+            description: descriptionEl.value,
+            releaseYear: releaseYearEl.value,
+            movieType: movieTypeEl.value,
+            status : statusEl.value === "1",
+            trailer: trailerEl.value,
+            countryId: countryEl.value,
+            genreIds: $('#genre').val(),
+            actorIds: $('#actor').val(),
+            directorIds: $('#director').val(),
+        }
+        // Gọi API
+        try {
+            let res = await axios.put(`/api/admin/movies/${currentMovie.id}`, data);
+            toastr.success("Cập nhật movie thành công")
+        } catch (e) {
+            console.log(e)
+            toastr.error(e.response.data.message);
+        }
+    })
+
+    btnDeleteMovie.addEventListener("click", async (e)=>{
+        const confirm = window.confirm("Bạn có chắc chắn muốn xóa ko")
+        if(confirm){
+            try {
+                const deleteMovie = await axios.delete(`/api/admin/movies/${currentMovie.id}`)
+                console.log("Sự kiện xóa movie")
+                toastr.success("Xóa thành công movie")
+                setTimeout(()=>{
+                    window.location.href='/admin/movies'
+                },1000)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    })
+
+    $('#form-movie').validate({
+        rules: {
+            name: {
+                required: true,
+                pattern: /^\s*\S.*$/, // Kiểm tra xem có ký tự nào không là khoảng trắng ở đầu không
+            },
+            releaseYear: {
+                required: true,
+                min: 1900,
+                max: 2100,
+            },
+            description:{
+                required: true,
+                pattern: /^\s*\S.*$/, // Kiểm tra xem có ký tự nào không là khoảng trắng ở đầu không
+            }
+        },
+        messages: {
+            name: {
+                required: "Vui lòng nhập tiêu đề",
+                pattern: "Tiêu đề không được chỉ chứa khoảng trắng"
+            },
+            releaseYear: {
+                required: "Vui lòng nhập năm phát hành",
+                min: "Không được dưới năm 1900",
+                max: "Không được trên năm 2100"
+            },
+            description:{
+                required: "Vui lòng nhập mô tả",
+                pattern: "Mô tả không được chỉ chứa khoảng trắng"
+            }
+        },
+        errorPlacement: function (error, element) {
+            if (element.attr("name") === "content") { // Kiểm tra nếu là trường nội dung
+                error.appendTo(element.siblings("span")); // Hiển thị thông báo lỗi bên cạnh trường nội dung
+            } else {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+
+    //Upload Image
+    const inputPosterEl = document.getElementById("input-poster")
+    const posterEl = document.getElementById("poster")
+    inputPosterEl.addEventListener("change",async (event) =>{
+        //lấy file upload
+        const files = event.target.files;
+
+        //Tạo đối tượng form data
+        const formData = new FormData();
+        formData.append("file",files[0])
+
+        //Gọi API
+        try {
+            let res = await axios.post(`/api/admin/movies/${currentMovie.id}/upload-poster`,formData)
+            console.log(res)
+            posterEl.src = res.data;
+        }catch (e){
+            console.log(e)
+        }
+    })
+</script>
+<script src="/web-assets/js/common.js"></script>
+</body>
+
+</html>

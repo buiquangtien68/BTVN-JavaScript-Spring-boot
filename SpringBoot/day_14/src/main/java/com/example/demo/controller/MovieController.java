@@ -2,6 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.entities.*;
 import com.example.demo.model.enums.MovieType;
+import com.example.demo.repository.ActorRepository;
+import com.example.demo.repository.CountryRepository;
+import com.example.demo.repository.DirectorRepository;
+import com.example.demo.repository.GenreRepository;
 import com.example.demo.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,16 @@ public class MovieController {
     FavoriteService favoriteService;
     @Autowired
     private HttpSession httpSession;
+
+
+    @Autowired
+    CountryService countryService;
+    @Autowired
+    DirectorService directorService;
+    @Autowired
+    ActorService actorService;
+    @Autowired
+    GenreService genreService;
 
 
     @GetMapping("/")
@@ -77,7 +91,7 @@ public class MovieController {
         model.addAttribute("movieTypes", movieTypes);
         model.addAttribute("episodes",episodeService.findByMovie_IdOrderByOrdersAsc(id));
         model.addAttribute("reviews",reviewService.findByMovie_IdOrderByCreatedAtDesc(id));
-        Optional<Movie> movie = movieService.getMovieById(id);
+        Optional<Movie> movie = movieService.getOptionalMovieById(id);
         if(movie.isPresent()) {
             List<Genre> genres =movie.get().getGenres();
             String rdGenre = genres.get(random.nextInt(genres.size())).getName();
@@ -121,5 +135,39 @@ public class MovieController {
         model.addAttribute("currentPage",page);
         return "web/phim-yeu-thich";
     }
+
+
+    //admin
+    @GetMapping("/admin/movies")
+    public String getIndexPage(Model model) {
+        model.addAttribute("movies",movieService.getAllMovies());
+        return "admin/movie/movie-index";
+    }
+
+    @GetMapping("/admin/movies/{id}")
+    public String getDetailPage(@PathVariable int id, Model model) {
+        model.addAttribute("movie",movieService.getMovieById(id));
+        model.addAttribute("countries",countryService.getAllCountries());
+        model.addAttribute("directors",directorService.getAllDirectors());
+        model.addAttribute("actors",actorService.getAllActors());
+        model.addAttribute("genres",genreService.getAllGenres());
+        model.addAttribute("movieType",MovieType.values());
+        return "admin/movie/movie-detail";
+    }
+
+    @GetMapping("/admin/movies/create")
+    public String getCreatePage(Model model) {
+        //Trả về danh sách quốc gia, thể loại, đạo diễn, loại phim, diễn viên
+        //TODO : refactor theo controller - service - repo
+        model.addAttribute("countries",countryService.getAllCountries());
+        model.addAttribute("directors",directorService.getAllDirectors());
+        model.addAttribute("actors",actorService.getAllActors());
+        model.addAttribute("genres",genreService.getAllGenres());
+        model.addAttribute("movieType",MovieType.values());
+      return "admin/movie/movie-create";
+    }
+
+
+
 
 }

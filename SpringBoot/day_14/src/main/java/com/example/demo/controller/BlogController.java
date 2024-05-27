@@ -33,6 +33,8 @@ public class BlogController {
         return "web/chi-tiet-blog";
     }
 
+
+    //admin
     @GetMapping("/admin/blogs")
     public String getIndexPage(Model model) {
         model.addAttribute("blogs", blogService.getAll());

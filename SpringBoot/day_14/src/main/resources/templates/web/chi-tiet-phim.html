@@ -67,8 +67,8 @@
                         <a style="text-decoration: none; color: black" th:case="${movieTypes.get(2)}" th:href="@{/phim-chieu-rap}" >Phim chiếu rạp</a>
                     </span>
                     </p>
-                    <p>Thể Loại: <span th:each="genre : ${movie.getGenres()}"><a style="text-decoration: none; color: black" href="" th:text="${genre.getName()}+', '" th:if="${genre!=movie.getGenres().get(movie.getGenres().size()-1)}">Tình Cảm</a></span>  <a href="" style="text-decoration: none; color: black" th:text="${movie.getGenres().get(movie.getGenres().size()-1).getName()}"> </a></p>
-                    <p>Đạo diễn: <span th:each="director : ${movie.getDirectors()}"><a style="text-decoration: none; color: black" href="" th:text="${director.getName()}+', '" th:if="${director!=movie.getDirectors().get(movie.getDirectors().size()-1)}">Tình Cảm</a></span>  <a href="" style="text-decoration: none; color: black" th:text="${movie.getDirectors().get(movie.getDirectors().size()-1).getName()}"> </a></p>
+                    <p>Thể Loại: <span th:each="genre, iterStat  : ${movie.getGenres()}"><a type="button" style="text-decoration: none; color: black" th:text="${genre.getName()}"></a><span th:if="${!iterStat.last}">, </span></span></p>
+                    <p>Đạo diễn: <span th:each="director, iterStat : ${movie.getDirectors()}"><a type="button" th:text="${director.getName()}" style="text-decoration: none; color: black"></a><span th:if="${!iterStat.last}">, </span></span> </p>
                     <p th:text="${movie.getDescription()}">
                     </p>
                     <p>
