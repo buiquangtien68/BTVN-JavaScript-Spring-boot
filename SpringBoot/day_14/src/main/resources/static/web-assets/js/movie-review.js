@@ -103,6 +103,8 @@ const myModalReviewEl = new bootstrap.Modal(modalReviewEl, {
 // reset
 modalReviewEl.addEventListener('hidden.bs.modal', event => {
     console.log("Su kien dong modal")
+    modalReviewTitleEl.innerText="Tạo bình luận"
+    btnCreateReviewEl.innerText="Tạo";
     currentRating = 0;
     reviewContentEl.value = "";
     ratingValue.textContent = "";
@@ -177,6 +179,7 @@ const deleteRv =async (id)=>{
 }
 const modalReviewTitleEl = document.querySelector(".modal-title")
 const btnCreateReviewEl = document.getElementById("btn-create-review")
+
 const openEditModal= (id)=>{
     myModalReviewEl.show();
     currentRating = reviews.find(review => review.id === id).rating;

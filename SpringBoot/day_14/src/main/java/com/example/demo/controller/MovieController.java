@@ -152,13 +152,13 @@ public class MovieController {
         model.addAttribute("actors",actorService.getAllActors());
         model.addAttribute("genres",genreService.getAllGenres());
         model.addAttribute("movieType",MovieType.values());
+        model.addAttribute("episodes",episodeService.findByMovie_IdOrderByOrdersAsc(id));
         return "admin/movie/movie-detail";
     }
 
     @GetMapping("/admin/movies/create")
     public String getCreatePage(Model model) {
         //Trả về danh sách quốc gia, thể loại, đạo diễn, loại phim, diễn viên
-        //TODO : refactor theo controller - service - repo
         model.addAttribute("countries",countryService.getAllCountries());
         model.addAttribute("directors",directorService.getAllDirectors());
         model.addAttribute("actors",actorService.getAllActors());
