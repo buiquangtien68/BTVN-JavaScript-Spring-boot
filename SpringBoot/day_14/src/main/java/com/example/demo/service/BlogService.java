@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entities.Blog;
+import com.example.demo.entities.Movie;
 import com.example.demo.entities.User;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.enums.MovieType;
@@ -117,5 +118,15 @@ public class BlogService {
         }catch (IOException e) {
             throw new RuntimeException("Error while uploading thumbnail");
         }
+    }
+
+    public List<Blog> getBlogInCurrentMonth() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        return blogRepository.findByCreatedAtBetween(startDate, endDate);
+    }
+
+    public List<Blog> getAllBlogs() {
+        return blogRepository.findAll(Sort.by("createdAt").descending());
     }
 }

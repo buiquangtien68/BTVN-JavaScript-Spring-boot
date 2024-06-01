@@ -12,12 +12,10 @@ const renderFavorites = favorites =>{
     let html = "";
     if (favorites.some(favorite => favorite.movie.id === currentMovie.id)) {
         html = `
-            <button id="watchButton" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Xem phim</button>
             <button id="favoriteButton" class="favorite-btn" onclick="toggleFavorite(currentMovie.id)" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Bỏ yêu thích</button>
         `;
     } else {
         html = `
-            <button id="watchButton" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Xem phim</button>
             <button id="favoriteButton" class="favorite-btn" onclick="toggleFavorite()" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Yêu thích</button>
         `;
     }

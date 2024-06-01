@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"  th:replace="~{web/layout/layout :: layout(~{::title},~{},~{:: #content},~{:: #js})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{web/layout/layout :: layout(~{::title},~{},~{:: #content},~{:: #js})}">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chi tiết phim</title>
-
+    <title>Xem phim</title>
 </head>
 
 <body>
 
 <th:block id="content">
-    <!--CHI TIẾT PHIM-->
+    <!--CHI TIẾT PHIM VÀ PHIM-->
     <section class="py-4 bg-body-secondary">
         <div class="container ">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -23,6 +22,13 @@
                         </li>
                     </ol>
                 </nav>
+            </div>
+
+            <div id="screen" class="m-3">
+                <video width="100%" controls th:src="${currentEpisode.videoURL}">
+                    <source  type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
             <div class="row">
@@ -60,22 +66,7 @@
                             Rating: <th:block th:text="${movie.getRating()}"></th:block> <i class="fas fa-star" style="color: #ffd43b"></i>
                         </p>
 
-                        <div>
-                            <th:block th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
-                                <a class="d-inline-block btn btn-danger rounded" style="background-color: red;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-                                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episodes.get(0).orders})}">
-                                    <span><i class="fa-solid fa-play"></i></span>
-                                    Xem phim</a>
-                            </th:block>
-                            <th:block
-                                    th:if="${(movie.type.toString() == 'PHIM_LE' || movie.type.toString() == 'PHIM_CHIEU_RAP') && episodes.size() > 0}">
-                                <a class="d-inline-block btn btn-danger rounded" style="background-color: red;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"
-                                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap='full')}">
-                                    <span><i class="fa-solid fa-play"></i></span>
-                                    Xem phim</a>
-                            </th:block>
-                        </div>
-                        <div id="btnFavoriteGroup" class="mt-2">
+                        <div id="btnFavoriteGroup">
                             <button th:if="${session.user !=null}" id="favoriteButton" class="favorite-btn" th:onclick="${favorite != null} ? 'toggleFavorite(' + ${movie.getId()} + ')' : 'toggleFavorite()'"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"><th:block th:if="${favorite != null}">Bỏ yêu thích</th:block><th:block th:unless="${favorite != null}">Yêu thích</th:block></button>
                             <button th:if="${session.user ==null}" id="favoriteButtonAnnotation" class="favorite-btn"  style="background-color: green;  color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Yêu thích</button>
                         </div>
@@ -102,11 +93,11 @@
 
     <!--TẬP PHIM-->
     <section class="py-4 bg-body-secondary" th:if="${movie.getType()==movieTypes.get(0)}">
-        <div class="container bg-dark-subtle rounded-4 p-4">
+        <div class="container  rounded-4 p-4">
             <h2 class="mb-3">Danh sách tập</h2>
             <div class="row">
                 <ul class="list-unstyled" >
-                    <li th:each="episode :${episodes}" class="d-inline-block mr-2"> <a th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.orders})}"><button type="button" class="btn btn-secondary mt-1" th:text="${episode.getName()}"></button></a></li>
+                    <li  th:each="episode :${episodes}"  class="d-inline-block mr-2" > <a  th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.orders})}"><button th:classappend="${episode.orders== currentEpisode.orders? 'btn-danger' :'btn-dark'}" type="button" class="btn btn-secondary mt-1" th:text="${episode.getName()}"></button></a></li>
                 </ul>
             </div>
         </div>
@@ -235,10 +226,11 @@
     </section>
 </th:block>
 
+
+
 <th:block id="js">
     <script src="/web-assets/js/movie-favorite.js"></script>
     <script src="/web-assets/js/movie-review.js"></script>
-
     <script th:inline="javascript">
         const currentMovie =[[${movie}]];
         let reviews =[[${reviews}]]
@@ -251,7 +243,5 @@
         console.log(favorites)
     </script>
 </th:block>
-
-
 </body>
 </html>

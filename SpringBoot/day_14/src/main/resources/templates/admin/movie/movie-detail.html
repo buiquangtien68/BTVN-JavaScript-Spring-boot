@@ -208,8 +208,8 @@
                                         <div class="modal-dialog modal-xl">
                                             <div class="modal-content">
                                                 <div class="modal-body">
-                                                    <video width="100%" controls>
-                                                        <source id="video" src="" type="video/mp4">
+                                                    <video width="100%" controls id="video">
+                                                        <source id="source" src="" type="video/mp4">
                                                     </video>
                                                 </div>
                                             </div>
@@ -336,6 +336,10 @@
                 genreIds: $('#genre').val(),
                 actorIds: $('#actor').val(),
                 directorIds: $('#director').val(),
+            }
+            if (movieTypeEl.value === "PHIM_LE" || movieTypeEl.value === "PHIM_CHIEU_RAP" && episodes.length>1){
+                toastr.error("Nếu là phim lẻ thì chỉ có 1 tập phim. Vui lòng xem lại")
+                return;
             }
             // Gọi API
             try {
@@ -476,6 +480,11 @@
                 return;
             }
 
+            if (movieTypeEl.value === "PHIM_LE" || movieTypeEl.value === "PHIM_CHIEU_RAP" && episodes.length>=1){
+               toastr.error("Nếu là phim lẻ thì chỉ có 1 tập phim. Vui lòng xem lại")
+                return;
+            }
+
             const data = {
                 name: nameEpisodeEl.value,
                 orders: ordersEpisodeEl.value,
@@ -584,7 +593,9 @@
             episodeListEl.innerHTML=html;
             console.log("Đã render")
         }
-
+        $.validator.addMethod("notEqualToArray", function(value, element, array) {
+            return array.indexOf(Number(value)) === -1;
+        }, "Thứ tự phim bị trùng");
         //Validate episodeForm
         $('#episodeForm').validate({
             rules: {
@@ -593,6 +604,7 @@
                 },
                 ordersEpisode: {
                     required: true,
+                    notEqualToArray: episodes.map(e=>e.orders)
                 },
             },
             messages: {
@@ -601,6 +613,8 @@
                 },
                 ordersEpisode: {
                     required: "Không được để trống thứ tự tập phim",
+                    notEqualToArray: "Thứ tự phim bị trùng"
+
                 },
             },
             errorElement: 'span',
@@ -617,7 +631,6 @@
         });
 
         //Upload video
-        const inputVideoEl = document.getElementById("input-video")
         const uploadVideo = (id)=>{
             document.getElementById(`input-video-${id}`).click();
             document.getElementById(`input-video-${id}`).addEventListener("change",async (event) =>{

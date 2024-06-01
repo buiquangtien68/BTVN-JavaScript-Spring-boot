@@ -1,117 +1,104 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{web/layout/layout :: layout(~{::title},~{},~{:: #content},~{:: #js})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 </head>
 <body>
-<th:block th:replace="~{web/fragment/header :: header}"></th:block>
-
-<section class="py-4 bg-body-secondary">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div>
-                    <h2>Đăng nhập</h2>
-                    <form id="form-login">
-                        <div class="input-group mb-3 form-group">
-                            <input type="text" class="form-control" placeholder="Nhập email"  id="input-email" name="email">
-                            <span class="input-group-text">Email</span>
-                        </div>
-                        <div class="input-group mb-3 form-group">
-                            <input type="text" class="form-control" placeholder="Nhập mật khẩu"  id="input-password" name="password">
-                            <span class="input-group-text" >Password</span>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <button id="btn-login" type="submit">Đăng nhập</button>
-                        </div>
-                        <p class="mt-3">Nếu không có tài khoản, bạn có thể đăng ký <span><a th:href="@{/dang-ky}">tại đây</a></span></p>
-                    </form>
+<th:block id="content">
+    <section class="py-4 bg-body-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        <h2>Đăng nhập</h2>
+                        <form id="form-login">
+                            <div class="input-group mb-3 form-group">
+                                <input type="text" class="form-control" placeholder="Nhập email"  id="input-email" name="email">
+                                <span class="input-group-text">Email</span>
+                            </div>
+                            <div class="input-group mb-3 form-group">
+                                <input type="text" class="form-control" placeholder="Nhập mật khẩu"  id="input-password" name="password">
+                                <span class="input-group-text" >Password</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button id="btn-login" type="submit">Đăng nhập</button>
+                            </div>
+                            <p class="mt-3">Nếu không có tài khoản, bạn có thể đăng ký <span><a th:href="@{/dang-ky}">tại đây</a></span></p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</th:block>
 
 
-<th:block th:replace="~{web/fragment/footer :: footer}"></th:block>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js" integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="/web-assets/js/common.js"></script>
-<script th:inline="javascript">
-    $('#form-login').validate({
-        rules: {
-            email: {
-                required: true,
-                email: true,
+<th:block id="js">
+    <script th:inline="javascript">
+        $('#form-login').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                },
+                password: {
+                    required: true,
+                },
             },
-            password: {
-                required: true,
+            messages: {
+                email: {
+                    required: "Email k được để trống",
+                    email: "Email k đúng định dạng"
+                },
+                password: {
+                    required: "Mật khẩu không được để trống",
+                }
             },
-        },
-        messages: {
-            email: {
-                required: "Email k được để trống",
-                email: "Email k đúng định dạng"
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
             },
-            password: {
-                required: "Mật khẩu không được để trống",
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-        }
-    });
+        });
 
 
-    const formLoginEl = document.getElementById("form-login");
-    const emailEl = document.getElementById("input-email");
-    const  passwordEl = document.getElementById("input-password");
+        const formLoginEl = document.getElementById("form-login");
+        const emailEl = document.getElementById("input-email");
+        const  passwordEl = document.getElementById("input-password");
 
-    formLoginEl.addEventListener("submit", async (e)=>{
-        e.preventDefault();
+        formLoginEl.addEventListener("submit", async (e)=>{
+            e.preventDefault();
 
-        if (!$('#form-login').valid()){
-            return;
-        }
+            if (!$('#form-login').valid()){
+                return;
+            }
 
-        const data = {
-            email: emailEl.value,
-            password: passwordEl.value
-        }
+            const data = {
+                email: emailEl.value,
+                password: passwordEl.value
+            }
 
-        // Gọi API
-        try {
-            let res = await axios.post("/api/auth/login", data);
-            toastr.success("Đăng nhập thành công")
-            setTimeout(()=>{
-                window.location.href='/'
-            },1000)
-        } catch (e) {
-            console.log(e)
-            toastr.error(e.response.data.message);
-        }
-    })
-</script>
-
+            // Gọi API
+            try {
+                let res = await axios.post("/api/auth/login", data);
+                toastr.success("Đăng nhập thành công")
+                setTimeout(()=>{
+                    window.location.href='/'
+                },1000)
+            } catch (e) {
+                console.log(e)
+                toastr.error(e.response.data.message);
+            }
+        })
+    </script>
+</th:block>
 </body>
 </html>

@@ -31,4 +31,8 @@ public class FileService {
                 ));
     }
 
+    public void deleteVideo(String publicId) throws IOException {
+        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    }
+
 }

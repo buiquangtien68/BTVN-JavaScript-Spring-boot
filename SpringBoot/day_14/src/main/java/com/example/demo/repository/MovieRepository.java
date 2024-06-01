@@ -46,4 +46,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     Optional<Movie> findById(Integer id);
 
+    @Query("SELECT DISTINCT m FROM Movie m WHERE m.createdAt BETWEEN ?1 AND ?2")
+    List<Movie> findByCreatedAtBetween(LocalDate startDate, LocalDate endDate);
+
 }

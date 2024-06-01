@@ -4,6 +4,7 @@ import com.example.demo.entities.Blog;
 import com.example.demo.entities.Country;
 import com.example.demo.entities.Movie;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.dataChart.MovieData;
 import com.example.demo.model.enums.MovieType;
 import com.example.demo.model.request.UpsertMovieRequest;
 import com.example.demo.repository.*;
@@ -17,9 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 public class MovieService {
@@ -139,4 +139,46 @@ public class MovieService {
             throw new RuntimeException("Error while uploading poster");
         }
     }
+
+    public List<Movie> getMovieInCurrentMonth() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        return movieRepository.findByCreatedAtBetween(startDate, endDate);
+    }
+
+    public List<MovieData> getMovieDataInFiveMonthsNearly() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = LocalDate.now().minusMonths(4).withDayOfMonth(1);
+        // Khởi tạo Map để lưu trữ dữ liệu của các tháng
+        Map<YearMonth, Integer> movieCountByMonth = new HashMap<>();
+
+        // Khởi tạo tất cả các tháng trong khoảng thời gian với số lượng phim ban đầu là 0
+        YearMonth currentMonth = YearMonth.from(startDate);
+        while (!currentMonth.isAfter(YearMonth.from(endDate))) {
+            movieCountByMonth.put(currentMonth, 0);
+            currentMonth = currentMonth.plusMonths(1);
+        }
+
+        // Lấy danh sách các bộ phim trong khoảng thời gian đã cho
+        movieRepository.findByCreatedAtBetween(startDate, endDate).forEach(movie -> {
+            YearMonth movieYearMonth = YearMonth.from(movie.getCreatedAt());
+            // Tăng số lượng phim cho tháng tương ứng
+            movieCountByMonth.put(movieYearMonth, movieCountByMonth.getOrDefault(movieYearMonth, 0) + 1);
+        });
+
+        // Chuyển dữ liệu từ Map sang danh sách MovieData
+        List<MovieData> movieDataList = new ArrayList<>();
+        movieCountByMonth.forEach((yearMonth, movieCount) -> {
+            movieDataList.add(MovieData.builder()
+                    .year(yearMonth.getYear())
+                    .month(yearMonth.getMonthValue())
+                    .movieCount(movieCount)
+                    .build());
+        });
+        // Sắp xếp theo ngày tăng dần
+        movieDataList.sort(Comparator.comparing(movieData -> YearMonth.of(movieData.getYear(), movieData.getMonth())));
+
+        return movieDataList;
+    }
+
 }

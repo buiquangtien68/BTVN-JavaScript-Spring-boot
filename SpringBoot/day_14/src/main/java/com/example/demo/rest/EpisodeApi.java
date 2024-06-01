@@ -37,7 +37,8 @@ public class EpisodeApi {
     }
 
     @PostMapping("/{id}/upload-video")
-    public ResponseEntity<?> uploadThumbnail( @PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadVideo( @PathVariable Integer id, @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(episodeService.uploadVideo(id,file));
     }
+
 }
